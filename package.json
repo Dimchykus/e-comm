@@ -2,8 +2,8 @@
   "name": "e-comm",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run start:dev",
+    "build": "node init && turbo run build",
+    "dev": "node init && turbo run start:dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
