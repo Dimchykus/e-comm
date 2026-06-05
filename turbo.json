@@ -20,6 +20,13 @@
     "start:dev": {
       "cache": false,
       "persistent": true
+    },
+    "db:start": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:stop": {
+      "cache": false
     }
   }
 }
