@@ -44,6 +44,27 @@ $ pnpm run start:dev
 $ pnpm run start:prod
 ```
 
+## Database migrations
+
+Migrations are run manually. All commands must be executed from the `apps/users-service` directory.
+
+```bash
+# Generate a migration by diffing entities against the current DB schema
+$ npm run migration:generate -- src/migrations/<Name>
+
+# Create an empty migration file for writing custom SQL manually
+$ npm run migration:create -- src/migrations/<Name>
+
+# Run all pending migrations
+$ npm run migration:run
+
+# Revert the last applied migration
+$ npm run migration:revert
+
+# Show all migrations and their applied status
+$ npm run migration:show
+```
+
 ## Run tests
 
 ```bash

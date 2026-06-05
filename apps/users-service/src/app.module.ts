@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './entities/user.entity';
+import { Address } from './entities/address.entity';
 
 @Module({
   imports: [
@@ -17,8 +18,10 @@ import { User } from './entities/user.entity';
         username: config.get('DB_USERNAME', 'postgres'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_NAME', 'postgres'),
-        entities: [User],
-        synchronize: config.get('NODE_ENV') !== 'production',
+        entities: [User, Address],
+        migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+        migrationsRun: false,
+        synchronize: false,
         logging: config.get('NODE_ENV') === 'development',
       }),
     }),
