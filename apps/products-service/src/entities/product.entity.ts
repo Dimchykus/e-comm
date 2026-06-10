@@ -7,12 +7,9 @@ import {
   DeleteDateColumn,
   Index,
 } from 'typeorm';
+import { ProductStatus } from '@repo/shared';
 
-export enum ProductStatus {
-  ACTIVE = 'active',
-  DRAFT = 'draft',
-  ARCHIVED = 'archived',
-}
+export { ProductStatus };
 
 @Entity('products')
 export class Product {

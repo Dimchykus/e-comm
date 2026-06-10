@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MICROSERVICES } from './constants';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -14,14 +15,8 @@ import { MICROSERVICES } from './constants';
           port: 4001,
         },
       },
-      {
-        name: MICROSERVICES.PRODUCTS_SERVICE,
-        transport: Transport.TCP,
-        options: {
-          port: 4002,
-        },
-      },
     ]),
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

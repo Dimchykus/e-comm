@@ -1,10 +1,32 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 4000);
 
-  console.log('API Gateway is running on port 4000');
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('E-Commerce API Gateway')
+    .setDescription('HTTP entry point for the e-commerce microservices')
+    .setVersion('1.0')
+    .addTag('products', 'Product catalog and inventory')
+    .build();
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('docs', app, document);
+
+  const port = process.env.PORT ?? 4000;
+  await app.listen(port);
+
+  console.log(`API Gateway is running on port ${port}`);
+  console.log(`Swagger UI available at http://localhost:${port}/docs`);
 }
 bootstrap();
