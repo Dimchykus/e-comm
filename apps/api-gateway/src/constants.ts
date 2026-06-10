@@ -1,4 +1,1 @@
-export const MICROSERVICES = {
-  USERS_SERVICE: 'USERS_SERVICE',
-  PRODUCTS_SERVICE: 'PRODUCTS_SERVICE',
-};
+export { MICROSERVICES } from '@repo/shared';
