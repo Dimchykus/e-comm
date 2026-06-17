@@ -9,6 +9,7 @@ import {
   Index,
 } from 'typeorm';
 import { Address } from './address.entity';
+import * as bcrypt from 'bcrypt';
 
 export enum UserRole {
   CUSTOMER = 'customer',
@@ -62,4 +63,8 @@ export class User {
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date | null;
+
+  validatePassword(password: string): boolean {
+    return bcrypt.compareSync(password, this.passwordHash);
+  }
 }

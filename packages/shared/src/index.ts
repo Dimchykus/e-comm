@@ -9,3 +9,6 @@ export * from './dto/find-all-products.dto';
 export * from './dto/search-products.dto';
 export * from './dto/update-stock.dto';
 export * from './dto/product-payloads.dto';
+export * from './dto/create-user.dto';
+export * from './dto/signup.dto';
+export * from './dto/login.dto';
