@@ -1,5 +1,11 @@
 import { User } from '@/entities/user.entity';
-import { LoginDto, SignupDto } from '@repo/shared';
+import {
+  PublicUser,
+  SignupDto,
+  toPublicUser,
+  UpdateUserDto,
+  UserRole,
+} from '@repo/shared';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
@@ -11,49 +17,50 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async findById(id: string): Promise<User> {
+  async findById(id: string): Promise<PublicUser> {
     const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    return user;
+    return toPublicUser(user);
   }
 
-  private async hashPassword(password: string, salt: string): Promise<string> {
-    const result = await bcrypt.hash(password, salt);
+  private async hashPassword(password: string): Promise<string> {
+    const saltRounds = 10;
+    const result = await bcrypt.hash(password, saltRounds);
 
     return result;
   }
 
-  async create(signupDto: SignupDto): Promise<User> {
+  async create(signupDto: SignupDto): Promise<PublicUser> {
     const { email, password, firstName, lastName, phone, role } = signupDto;
     const user = new User();
 
     user.email = email;
-    user.passwordHash = await this.hashPassword(password, '12312');
+    user.passwordHash = await this.hashPassword(password);
     user.firstName = firstName;
     user.lastName = lastName;
-    user.phone = phone;
-    user.role = role;
+    user.phone = phone || null;
+    user.role = role || UserRole.CUSTOMER;
 
-    await this.usersRepository.save(user);
+    const savedUser = await this.usersRepository.save(user);
 
-    return user;
+    return toPublicUser(savedUser);
   }
 
-  async signIn(loginDto: LoginDto): Promise<User | null> {
-    const { email, password } = loginDto;
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<PublicUser> {
+    const result = await this.usersRepository.update(id, updateUserDto);
 
-    const user = await this.usersRepository.findOne({
-      where: { email },
-    });
-
-    if (user && user.validatePassword(password)) {
-      return user;
-    } else {
-      return null;
+    if (result.affected === 0) {
+      throw new NotFoundException('User not found');
     }
+
+    return this.findById(id);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.usersRepository.delete(id);
   }
 }
