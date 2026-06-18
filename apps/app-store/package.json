@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "dependencies": {
     "@expo/ui": "~56.0.18",
+    "@tanstack/react-query": "^5.101.0",
+    "axios": "^1.18.0",
     "expo": "~56.0.12",
     "expo-constants": "~56.0.18",
     "expo-device": "~56.0.4",
@@ -29,6 +31,8 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "orval": "^8.17.0",
+    "prettier": "^3.7.4",
     "typescript": "~6.0.3"
   },
   "scripts": {
@@ -37,7 +41,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "gen:api": "orval"
   },
   "private": true
 }
