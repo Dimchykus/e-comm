@@ -1,6 +1,6 @@
 // auth.controller.ts
-import { Controller, Post, Body } from '@nestjs/common';
-import { SignupDto, USERS_PATTERNS, PublicUser } from '@repo/shared';
+import { Controller, Body } from '@nestjs/common';
+import { SignupDto, LoginDto, USERS_PATTERNS, PublicUser } from '@repo/shared';
 import { AuthService } from './auth.service';
 import { MessagePattern } from '@nestjs/microservices';
 
@@ -23,14 +23,13 @@ export class AuthController {
   //   };
   // }
 
-  @Post('signup')
   @MessagePattern(USERS_PATTERNS.SIGNUP)
   signup(@Body() signupDto: SignupDto): Promise<PublicUser> {
     return this.authService.signUp(signupDto);
   }
 
-  // @Put('login')
-  // login(@Body() loginDto: LoginDto): Promise<UserJwtResponse> {
-  //   return this.authService.login(loginDto);
-  // }
+  @MessagePattern(USERS_PATTERNS.LOGIN)
+  login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
+  }
 }

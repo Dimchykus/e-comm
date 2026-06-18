@@ -19,6 +19,15 @@ async function bootstrap() {
     .setDescription('HTTP entry point for the e-commerce microservices')
     .setVersion('1.0')
     .addTag('products', 'Product catalog and inventory')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Enter the JWT access token returned by /auth/login',
+      },
+      'access-token',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, document);

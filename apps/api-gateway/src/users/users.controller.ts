@@ -5,11 +5,20 @@ import {
   Param,
   ParseUUIDPipe,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { MICROSERVICES, UpdateUserDto, USERS_PATTERNS } from '@repo/shared';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(
@@ -22,6 +31,9 @@ export class UsersController {
   @ApiParam({ name: 'id', format: 'uuid' })
   @ApiResponse({ status: 200, description: 'Updated user' })
   @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,

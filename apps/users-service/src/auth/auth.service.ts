@@ -1,12 +1,13 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { SignupDto, LoginDto, PublicUser, toPublicUser } from '@repo/shared';
 import { JwtService } from '@nestjs/jwt';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@/entities/user.entity';
 
-interface UserJwtResponse {
+export interface UserJwtResponse {
   user: PublicUser;
   accessToken: string;
 }
@@ -27,7 +28,7 @@ export class AuthService {
     return this.usersService.create(signupDto);
   }
 
-  async signIn(loginDto: LoginDto): Promise<PublicUser | null> {
+  async validateUser(loginDto: LoginDto): Promise<PublicUser | null> {
     const { email, password } = loginDto;
 
     const user = await this.usersRepository.findOne({
@@ -42,13 +43,17 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto): Promise<UserJwtResponse> {
-    const userResult = await this.signIn(loginDto);
+    const userResult = await this.validateUser(loginDto);
 
     if (!userResult) {
-      throw new UnauthorizedException('Invalid Credentials!');
+      throw new RpcException({
+        statusCode: 401,
+        message: 'Invalid credentials',
+        error: 'Unauthorized',
+      });
     }
 
-    const payload = { userResult };
+    const payload = { sub: userResult.id, email: userResult.email };
     const accessToken = this.jwtService.sign(payload);
 
     const signInResponse: UserJwtResponse = { user: userResult, accessToken };
