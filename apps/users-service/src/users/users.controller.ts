@@ -7,6 +7,11 @@ import { PublicUserDto, UpdateUserDto, USERS_PATTERNS } from '@repo/shared';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @MessagePattern(USERS_PATTERNS.GET)
+  getUser(@Payload('id') id: string): Promise<PublicUserDto> {
+    return this.usersService.findById(id);
+  }
+
   @MessagePattern(USERS_PATTERNS.UPDATE)
   update(
     @Payload('id') id: string,

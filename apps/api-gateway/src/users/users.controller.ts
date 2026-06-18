@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   Inject,
   Param,
   ParseUUIDPipe,
   Put,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -15,7 +17,13 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { MICROSERVICES, UpdateUserDto, USERS_PATTERNS } from '@repo/shared';
+import {
+  MICROSERVICES,
+  PublicUserDto,
+  UpdateUserDto,
+  USERS_PATTERNS,
+} from '@repo/shared';
+import { Observable } from 'rxjs';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('users')
@@ -26,10 +34,30 @@ export class UsersController {
     private readonly usersClient: ClientProxy,
   ) {}
 
+  @Get('me')
+  @ApiOperation({ summary: 'Get the currently authenticated user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current user',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  getMe(
+    @Request() req: { user: { userId: string } },
+  ): Observable<PublicUserDto> {
+    return this.usersClient.send<PublicUserDto>(USERS_PATTERNS.GET, {
+      id: req.user.userId,
+    });
+  }
+
   @Put(':id')
   @ApiOperation({ summary: 'Update a user' })
   @ApiParam({ name: 'id', format: 'uuid' })
-  @ApiResponse({ status: 200, description: 'Updated user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Updated user',
+  })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiBearerAuth('access-token')
@@ -37,8 +65,8 @@ export class UsersController {
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
-  ) {
-    return this.usersClient.send(USERS_PATTERNS.UPDATE, {
+  ): Observable<PublicUserDto> {
+    return this.usersClient.send<PublicUserDto>(USERS_PATTERNS.UPDATE, {
       id,
       data: updateUserDto,
     });
