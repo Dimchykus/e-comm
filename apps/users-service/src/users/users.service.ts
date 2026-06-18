@@ -50,7 +50,10 @@ export class UsersService {
     return toPublicUser(savedUser);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<PublicUserDto> {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<PublicUserDto> {
     const result = await this.usersRepository.update(id, updateUserDto);
 
     if (result.affected === 0) {

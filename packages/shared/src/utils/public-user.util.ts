@@ -26,6 +26,7 @@ export function toPublicUser(user: IUser): PublicUserDto {
   const result = new PublicUserDto();
 
   for (const key of PUBLIC_USER_FIELDS) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- cast required for correlated index assignment
     (result[key] as PublicUserDto[typeof key]) = user[key];
   }
 

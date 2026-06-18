@@ -43,9 +43,17 @@ export class PublicUserDto {
   })
   dateOfBirth: Date | null;
 
-  @ApiProperty({ example: "2026-01-01T12:00:00.000Z", type: String, format: "date-time" })
+  @ApiProperty({
+    example: "2026-01-01T12:00:00.000Z",
+    type: String,
+    format: "date-time",
+  })
   createdAt: Date;
 
-  @ApiProperty({ example: "2026-01-01T12:00:00.000Z", type: String, format: "date-time" })
+  @ApiProperty({
+    example: "2026-01-01T12:00:00.000Z",
+    type: String,
+    format: "date-time",
+  })
   updatedAt: Date;
 }

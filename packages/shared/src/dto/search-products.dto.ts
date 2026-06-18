@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
   IsInt,
   IsNotEmpty,
@@ -7,10 +7,10 @@ import {
   IsString,
   Max,
   Min,
-} from 'class-validator';
+} from "class-validator";
 
 export class SearchProductsDto {
-  @ApiProperty({ example: 'mouse', description: 'Search term' })
+  @ApiProperty({ example: "mouse", description: "Search term" })
   @IsString()
   @IsNotEmpty()
   q: string;

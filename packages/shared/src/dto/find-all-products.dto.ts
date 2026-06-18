@@ -1,5 +1,5 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { Transform, Type } from "class-transformer";
 import {
   IsBoolean,
   IsEnum,
@@ -8,8 +8,8 @@ import {
   IsString,
   Max,
   Min,
-} from 'class-validator';
-import { ProductStatus } from '../interfaces/product.interface';
+} from "class-validator";
+import { ProductStatus } from "../interfaces/product.interface";
 
 export class FindAllProductsDto {
   @ApiPropertyOptional({ default: 1, minimum: 1 })
@@ -32,12 +32,12 @@ export class FindAllProductsDto {
   @IsEnum(ProductStatus)
   status?: ProductStatus;
 
-  @ApiPropertyOptional({ example: 'electronics' })
+  @ApiPropertyOptional({ example: "electronics" })
   @IsOptional()
   @IsString()
   category?: string;
 
-  @ApiPropertyOptional({ example: 'Logitech' })
+  @ApiPropertyOptional({ example: "Logitech" })
   @IsOptional()
   @IsString()
   brand?: string;
@@ -45,7 +45,7 @@ export class FindAllProductsDto {
   @ApiPropertyOptional({ type: Boolean })
   @IsOptional()
   @Transform(({ value }: { value: unknown }) =>
-    value === 'true' ? true : value === 'false' ? false : (value as boolean),
+    value === "true" ? true : value === "false" ? false : (value as boolean),
   )
   @IsBoolean()
   isFeatured?: boolean;

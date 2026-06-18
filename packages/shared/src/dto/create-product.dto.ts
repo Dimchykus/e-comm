@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
   IsArray,
   IsBoolean,
@@ -12,34 +12,34 @@ import {
   Matches,
   Min,
   MaxLength,
-} from 'class-validator';
-import { ProductStatus } from '../interfaces/product.interface';
+} from "class-validator";
+import { ProductStatus } from "../interfaces/product.interface";
 
 export class CreateProductDto {
-  @ApiProperty({ example: 'Wireless Mouse', maxLength: 255 })
+  @ApiProperty({ example: "Wireless Mouse", maxLength: 255 })
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
   name: string;
 
   @ApiProperty({
-    example: 'wireless-mouse',
-    description: 'URL-friendly unique identifier (lowercase, hyphens)',
+    example: "wireless-mouse",
+    description: "URL-friendly unique identifier (lowercase, hyphens)",
   })
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
   @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
-    message: 'slug must be lowercase letters, numbers and hyphens',
+    message: "slug must be lowercase letters, numbers and hyphens",
   })
   slug: string;
 
-  @ApiProperty({ example: 'An ergonomic 2.4GHz wireless mouse.' })
+  @ApiProperty({ example: "An ergonomic 2.4GHz wireless mouse." })
   @IsString()
   @IsNotEmpty()
   description: string;
 
-  @ApiPropertyOptional({ example: 'Ergonomic wireless mouse' })
+  @ApiPropertyOptional({ example: "Ergonomic wireless mouse" })
   @IsOptional()
   @IsString()
   shortDescription?: string;
@@ -51,7 +51,7 @@ export class CreateProductDto {
 
   @ApiPropertyOptional({
     example: 39.99,
-    description: 'Original price shown struck through',
+    description: "Original price shown struck through",
   })
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
@@ -64,13 +64,13 @@ export class CreateProductDto {
   @Min(0)
   costPrice?: number;
 
-  @ApiPropertyOptional({ example: 'WM-2024-BLK' })
+  @ApiPropertyOptional({ example: "WM-2024-BLK" })
   @IsOptional()
   @IsString()
   @MaxLength(100)
   sku?: string;
 
-  @ApiPropertyOptional({ example: '0123456789012' })
+  @ApiPropertyOptional({ example: "0123456789012" })
   @IsOptional()
   @IsString()
   @MaxLength(100)
@@ -93,13 +93,13 @@ export class CreateProductDto {
   @IsEnum(ProductStatus)
   status?: ProductStatus;
 
-  @ApiPropertyOptional({ example: 'electronics' })
+  @ApiPropertyOptional({ example: "electronics" })
   @IsOptional()
   @IsString()
   @MaxLength(100)
   category?: string;
 
-  @ApiPropertyOptional({ example: 'Logitech' })
+  @ApiPropertyOptional({ example: "Logitech" })
   @IsOptional()
   @IsString()
   @MaxLength(100)
@@ -113,20 +113,20 @@ export class CreateProductDto {
 
   @ApiPropertyOptional({
     type: [String],
-    example: ['https://cdn.example.com/mouse-1.jpg'],
+    example: ["https://cdn.example.com/mouse-1.jpg"],
   })
   @IsOptional()
   @IsArray()
   @IsUrl({}, { each: true })
   images?: string[];
 
-  @ApiPropertyOptional({ type: [String], example: ['wireless', 'ergonomic'] })
+  @ApiPropertyOptional({ type: [String], example: ["wireless", "ergonomic"] })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   tags?: string[];
 
-  @ApiPropertyOptional({ example: 'Wireless Mouse | MyShop' })
+  @ApiPropertyOptional({ example: "Wireless Mouse | MyShop" })
   @IsOptional()
   @IsString()
   @MaxLength(255)

@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import {
-  SignupDto,
-  LoginDto,
-  PublicUserDto,
-  toPublicUser,
-} from '@repo/shared';
+import { SignupDto, LoginDto, PublicUserDto, toPublicUser } from '@repo/shared';
 import { JwtService } from '@nestjs/jwt';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';

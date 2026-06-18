@@ -1,8 +1,8 @@
-import { IAddress } from './address.interface';
+import { IAddress } from "./address.interface";
 
 export enum UserRole {
-  CUSTOMER = 'customer',
-  ADMIN = 'admin',
+  CUSTOMER = "customer",
+  ADMIN = "admin",
 }
 
 export interface IUser {
