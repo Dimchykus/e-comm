@@ -39,6 +39,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Current user',
+    type: PublicUserDto,
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiBearerAuth('access-token')
@@ -57,6 +58,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Updated user',
+    type: PublicUserDto,
   })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
