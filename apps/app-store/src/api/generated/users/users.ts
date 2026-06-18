@@ -5,18 +5,174 @@
  * HTTP entry point for the e-commerce microservices
  * OpenAPI spec version: 1.0
  */
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
   MutationFunction,
   QueryClient,
+  QueryFunction,
+  QueryKey,
+  UndefinedInitialDataOptions,
   UseMutationOptions,
   UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
 } from "@tanstack/react-query";
 
 import axios from "axios";
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
-import type { UpdateUserDto } from "../model";
+import type { PublicUserDto, UpdateUserDto } from "../model";
+
+/**
+ * @summary Get the currently authenticated user
+ */
+export const usersControllerGetMe = (
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<PublicUserDto>> => {
+  return axios.get(`/users/me`, options);
+};
+
+export const getUsersControllerGetMeQueryKey = () => {
+  return [`/users/me`] as const;
+};
+
+export const getUsersControllerGetMeQueryOptions = <
+  TData = Awaited<ReturnType<typeof usersControllerGetMe>>,
+  TError = AxiosError<void>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof usersControllerGetMe>>,
+      TError,
+      TData
+    >
+  >;
+  axios?: AxiosRequestConfig;
+}) => {
+  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getUsersControllerGetMeQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof usersControllerGetMe>>
+  > = ({ signal }) => usersControllerGetMe({ signal, ...axiosOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof usersControllerGetMe>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type UsersControllerGetMeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof usersControllerGetMe>>
+>;
+export type UsersControllerGetMeQueryError = AxiosError<void>;
+
+export function useUsersControllerGetMe<
+  TData = Awaited<ReturnType<typeof usersControllerGetMe>>,
+  TError = AxiosError<void>,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof usersControllerGetMe>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof usersControllerGetMe>>,
+          TError,
+          Awaited<ReturnType<typeof usersControllerGetMe>>
+        >,
+        "initialData"
+      >;
+    axios?: AxiosRequestConfig;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useUsersControllerGetMe<
+  TData = Awaited<ReturnType<typeof usersControllerGetMe>>,
+  TError = AxiosError<void>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof usersControllerGetMe>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof usersControllerGetMe>>,
+          TError,
+          Awaited<ReturnType<typeof usersControllerGetMe>>
+        >,
+        "initialData"
+      >;
+    axios?: AxiosRequestConfig;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useUsersControllerGetMe<
+  TData = Awaited<ReturnType<typeof usersControllerGetMe>>,
+  TError = AxiosError<void>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof usersControllerGetMe>>,
+        TError,
+        TData
+      >
+    >;
+    axios?: AxiosRequestConfig;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+/**
+ * @summary Get the currently authenticated user
+ */
+
+export function useUsersControllerGetMe<
+  TData = Awaited<ReturnType<typeof usersControllerGetMe>>,
+  TError = AxiosError<void>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof usersControllerGetMe>>,
+        TError,
+        TData
+      >
+    >;
+    axios?: AxiosRequestConfig;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getUsersControllerGetMeQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 /**
  * @summary Update a user
@@ -25,7 +181,7 @@ export const usersControllerUpdate = (
   id: string,
   updateUserDto: UpdateUserDto,
   options?: AxiosRequestConfig,
-): Promise<AxiosResponse<void>> => {
+): Promise<AxiosResponse<PublicUserDto>> => {
   return axios.put(`/users/${id}`, updateUserDto, options);
 };
 
