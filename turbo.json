@@ -19,6 +19,7 @@
     },
     "start:dev": {
       "dependsOn": ["^build"],
+      "with": ["@repo/shared#dev"],
       "cache": false,
       "persistent": true
     },

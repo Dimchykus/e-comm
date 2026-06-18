@@ -1,7 +1,6 @@
 export * from './constants/microservices.constant';
 export * from './constants/message-patterns.constant';
 export * from './interfaces/user.interface';
-export * from './interfaces/public-user.interface';
 export * from './interfaces/address.interface';
 export * from './interfaces/product.interface';
 export * from './dto/create-product.dto';
@@ -14,3 +13,5 @@ export * from './dto/create-user.dto';
 export * from './dto/signup.dto';
 export * from './dto/login.dto';
 export * from './dto/update-user.dto';
+export * from './dto/public-user.dto';
+export * from './utils/public-user.util';

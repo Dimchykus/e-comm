@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { SignupDto, LoginDto, PublicUser, toPublicUser } from '@repo/shared';
+import {
+  SignupDto,
+  LoginDto,
+  PublicUserDto,
+  toPublicUser,
+} from '@repo/shared';
 import { JwtService } from '@nestjs/jwt';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,7 +13,7 @@ import { Repository } from 'typeorm';
 import { User } from '@/entities/user.entity';
 
 export interface UserJwtResponse {
-  user: PublicUser;
+  user: PublicUserDto;
   accessToken: string;
 }
 
@@ -24,11 +29,11 @@ export class AuthService {
     return await this.usersService.findById(userId);
   }
 
-  async signUp(signupDto: SignupDto): Promise<PublicUser> {
+  async signUp(signupDto: SignupDto): Promise<PublicUserDto> {
     return this.usersService.create(signupDto);
   }
 
-  async validateUser(loginDto: LoginDto): Promise<PublicUser | null> {
+  async validateUser(loginDto: LoginDto): Promise<PublicUserDto | null> {
     const { email, password } = loginDto;
 
     const user = await this.usersRepository.findOne({

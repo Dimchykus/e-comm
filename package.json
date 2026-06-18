@@ -7,6 +7,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
+    "build:shared": "turbo run build --filter=@repo/shared",
     "db:start": "turbo run db:start --filter=users-service --filter=products-service",
     "db:stop": "turbo run db:stop --filter=users-service --filter=products-service"
   },

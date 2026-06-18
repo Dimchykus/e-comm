@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { PublicUser, UpdateUserDto, USERS_PATTERNS } from '@repo/shared';
+import { PublicUserDto, UpdateUserDto, USERS_PATTERNS } from '@repo/shared';
 
 @Controller('users')
 export class UsersController {
@@ -11,7 +11,7 @@ export class UsersController {
   update(
     @Payload('id') id: string,
     @Payload('data') updateUserDto: UpdateUserDto,
-  ): Promise<PublicUser> {
+  ): Promise<PublicUserDto> {
     return this.usersService.update(id, updateUserDto);
   }
 }

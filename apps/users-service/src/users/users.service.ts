@@ -1,6 +1,6 @@
 import { User } from '@/entities/user.entity';
 import {
-  PublicUser,
+  PublicUserDto,
   SignupDto,
   toPublicUser,
   UpdateUserDto,
@@ -17,7 +17,7 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async findById(id: string): Promise<PublicUser> {
+  async findById(id: string): Promise<PublicUserDto> {
     const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
@@ -34,7 +34,7 @@ export class UsersService {
     return result;
   }
 
-  async create(signupDto: SignupDto): Promise<PublicUser> {
+  async create(signupDto: SignupDto): Promise<PublicUserDto> {
     const { email, password, firstName, lastName, phone, role } = signupDto;
     const user = new User();
 
@@ -50,7 +50,7 @@ export class UsersService {
     return toPublicUser(savedUser);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<PublicUser> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<PublicUserDto> {
     const result = await this.usersRepository.update(id, updateUserDto);
 
     if (result.affected === 0) {
