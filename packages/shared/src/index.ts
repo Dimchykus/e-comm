@@ -15,3 +15,5 @@ export * from "./dto/login.dto";
 export * from "./dto/update-user.dto";
 export * from "./dto/public-user.dto";
 export * from "./utils/public-user.util";
+export * from "./dto/public-product.dto";
+export * from "./utils/public-product.utils";

@@ -6,10 +6,9 @@ export const USERS_PATTERNS = {
   DELETE: "user.deleteUser",
 } as const;
 
-export const PRODUCT_PATTERNS = {
+export const PRODUCTS_PATTERNS = {
   CREATE: "product.create",
-  FIND_ALL: "product.findAll",
-  FIND_ONE: "product.findOne",
+  FIND_BY_ID: "product.findById",
   UPDATE: "product.update",
   DELETE: "product.delete",
   SEARCH: "product.search",

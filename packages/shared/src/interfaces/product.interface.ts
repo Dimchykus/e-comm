@@ -28,4 +28,5 @@ export interface IProduct {
   isFeatured: boolean;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt: Date | null;
 }
