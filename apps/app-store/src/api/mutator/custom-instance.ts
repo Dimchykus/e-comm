@@ -7,20 +7,27 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios';
  */
 const baseURL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
 
-export const AXIOS_INSTANCE = axios.create({ baseURL });
+/**
+ * The Orval-generated hooks call the global `axios` export directly (no mutator
+ * override is configured), so we configure that same global instance here.
+ * `AXIOS_INSTANCE` is re-exported for callers that need the raw client.
+ */
+axios.defaults.baseURL = baseURL;
+
+export const AXIOS_INSTANCE = axios;
 
 let authToken: string | null = null;
 
 /**
  * Set (or clear) the bearer token used for authenticated requests. Call this
  * after login with the access token returned by /auth/login, and with `null`
- * on logout.
+ * on logout. The auth layer (`@/auth`) wires this up automatically.
  */
 export const setAuthToken = (token: string | null) => {
   authToken = token;
 };
 
-AXIOS_INSTANCE.interceptors.request.use((config) => {
+axios.interceptors.request.use((config) => {
   if (authToken) {
     config.headers.Authorization = `Bearer ${authToken}`;
   }

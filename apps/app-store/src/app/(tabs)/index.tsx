@@ -1,7 +1,8 @@
 import * as Device from "expo-device";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useSession } from "@/auth";
 import { AnimatedIcon } from "@/components/animated-icon";
 import { HintRow } from "@/components/hint-row";
 import { ThemedText } from "@/components/themed-text";
@@ -29,6 +30,8 @@ function getDevMenuHint() {
 }
 
 export default function HomeScreen() {
+  const { signOut } = useSession();
+
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
@@ -56,6 +59,15 @@ export default function HomeScreen() {
         </ThemedView>
 
         {Platform.OS === "web" && <WebBadge />}
+
+        <Pressable
+          onPress={signOut}
+          style={({ pressed }) => [styles.logoutButton, pressed && styles.logoutButtonPressed]}
+        >
+          <ThemedText type="small" style={styles.logoutText}>
+            Log out
+          </ThemedText>
+        </Pressable>
       </SafeAreaView>
     </ThemedView>
   );
@@ -94,5 +106,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.four,
     borderRadius: Spacing.four,
+  },
+  logoutButton: {
+    alignSelf: "stretch",
+    alignItems: "center",
+    paddingVertical: Spacing.two,
+    borderRadius: Spacing.two,
+  },
+  logoutButtonPressed: {
+    opacity: 0.5,
+  },
+  logoutText: {
+    color: "#FF3B30",
   },
 });
