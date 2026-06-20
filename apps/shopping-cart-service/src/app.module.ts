@@ -25,6 +25,7 @@ import { CartItem } from './entities/cart-item.entity';
         logging: config.get('NODE_ENV') === 'development',
       }),
     }),
+    TypeOrmModule.forFeature([Cart, CartItem]),
   ],
   controllers: [AppController],
   providers: [AppService],

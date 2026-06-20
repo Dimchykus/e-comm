@@ -27,6 +27,7 @@
     "migration:show": "ts-node -r tsconfig-paths/register -P tsconfig.migrations.json ./node_modules/typeorm/cli.js migration:show -d src/data-source.ts"
   },
   "dependencies": {
+    "@repo/shared": "workspace:*",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",

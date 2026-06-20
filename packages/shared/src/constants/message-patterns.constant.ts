@@ -14,3 +14,10 @@ export const PRODUCTS_PATTERNS = {
   SEARCH: "product.search",
   UPDATE_STOCK: "product.updateStock",
 } as const;
+
+export const SHOPPING_CART_PATTERNS = {
+  CREATE: "cart.create",
+  ADD_PRODUCT: "cart.addProduct",
+  REMOVE_PRODUCT: "cart.removeProduct",
+  SET_PRODUCT_QUANTITY: "cart.setProductQuantity",
+} as const;
