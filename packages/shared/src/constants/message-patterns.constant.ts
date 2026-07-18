@@ -28,3 +28,9 @@ export const ORDERS_PATTERNS = {
   FIND_BY_USER: "order.findByUser",
   UPDATE_STATUS: "order.updateStatus",
 } as const;
+
+export const PAYMENTS_PATTERNS = {
+  CHARGE: "payment.charge",
+  REFUND: "payment.refund",
+  GET_HISTORY: "payment.getHistory",
+} as const;

@@ -29,3 +29,7 @@ export * from "./dto/update-order-status.dto";
 export * from "./dto/order-payloads.dto";
 export * from "./dto/public-order.dto";
 export * from "./dto/public-order-item.dto";
+export * from "./interfaces/payment.interface";
+export * from "./dto/charge-payment.dto";
+export * from "./dto/payment-payloads.dto";
+export * from "./dto/public-payment.dto";
