@@ -1,10 +1,12 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import {
   CreateOrderDto,
   FindOrderByIdPayload,
   FindOrdersByUserPayload,
+  NOTIFICATION_EVENTS,
   ORDERS_PATTERNS,
+  PaymentSucceededEvent,
   PublicOrderDto,
   UpdateOrderStatusDto,
 } from '@repo/shared';
@@ -40,5 +42,19 @@ export class AppController {
     @Payload() updateOrderStatusDto: UpdateOrderStatusDto,
   ): Promise<PublicOrderDto> {
     return this.appService.updateStatus(updateOrderStatusDto);
+  }
+
+  @MessagePattern(ORDERS_PATTERNS.CANCEL)
+  cancelOrder(
+    @Payload() { orderId }: FindOrderByIdPayload,
+  ): Promise<PublicOrderDto> {
+    return this.appService.cancel(orderId);
+  }
+
+  @EventPattern(NOTIFICATION_EVENTS.PAYMENT_SUCCEEDED)
+  handlePaymentSucceeded(
+    @Payload() event: PaymentSucceededEvent,
+  ): Promise<void> {
+    return this.appService.handlePaymentSucceeded(event);
   }
 }

@@ -14,6 +14,8 @@ export const toPublicCartItem = (cartItem: CartItem): PublicCartItemDto => {
   return {
     id: cartItem.id,
     productId: cartItem.productId,
+    name: cartItem.name,
+    price: cartItem.price,
     quantity: cartItem.quantity,
   };
 };

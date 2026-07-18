@@ -19,6 +19,20 @@ import { OrderItem } from './entities/order-item.entity';
           port: 4006,
         },
       },
+      {
+        name: MICROSERVICES.SHOPPING_CART_SERVICE,
+        transport: Transport.TCP,
+        options: {
+          port: 4003,
+        },
+      },
+      {
+        name: MICROSERVICES.PRODUCTS_SERVICE,
+        transport: Transport.TCP,
+        options: {
+          port: 4002,
+        },
+      },
     ]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],

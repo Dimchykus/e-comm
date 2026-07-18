@@ -32,15 +32,20 @@ export class AppService {
     private readonly paymentRepository: Repository<Payment>,
     @Inject(MICROSERVICES.NOTIFICATION_SERVICE)
     private readonly notificationClient: ClientProxy,
+    @Inject(MICROSERVICES.ORDER_SERVICE)
+    private readonly orderClient: ClientProxy,
     @Inject(STRIPE_CLIENT)
     private readonly stripe: Stripe,
     private readonly config: ConfigService,
   ) {}
 
+  // TCP has no pub/sub, so each interested service gets its own emit
   private emitEvent(event: string, payload: unknown): void {
-    this.notificationClient.emit(event, payload).subscribe({
-      error: (err) => this.logger.error(`Failed to emit ${event}`, err),
-    });
+    for (const client of [this.notificationClient, this.orderClient]) {
+      client.emit(event, payload).subscribe({
+        error: (err) => this.logger.error(`Failed to emit ${event}`, err),
+      });
+    }
   }
 
   async charge(

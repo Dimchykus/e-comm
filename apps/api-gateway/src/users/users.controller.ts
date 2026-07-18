@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -72,5 +73,16 @@ export class UsersController {
       id,
       data: updateUserDto,
     });
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete a user account' })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiResponse({ status: 200, description: 'User deleted' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  delete(@Param('id', ParseUUIDPipe) id: string): Observable<void> {
+    return this.usersClient.send<void>(USERS_PATTERNS.DELETE, { id });
   }
 }

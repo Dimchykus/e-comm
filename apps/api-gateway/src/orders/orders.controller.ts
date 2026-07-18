@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Inject,
   Param,
   Patch,
@@ -36,11 +37,21 @@ export class OrdersController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Place a new order' })
+  @ApiOperation({ summary: "Place a new order from the user's cart" })
   @ApiResponse({ status: 201, type: PublicOrderDto })
-  @ApiResponse({ status: 400, description: 'Validation failed' })
+  @ApiResponse({ status: 400, description: 'Validation failed or cart empty' })
   createOrder(@Body() createOrderDto: CreateOrderDto): Promise<PublicOrderDto> {
     return this.send(ORDERS_PATTERNS.CREATE, createOrderDto);
+  }
+
+  @Post(':orderId/cancel')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Cancel an order' })
+  @ApiResponse({ status: 200, type: PublicOrderDto })
+  @ApiResponse({ status: 400, description: 'Order cannot be cancelled' })
+  @ApiResponse({ status: 404, description: 'Order not found' })
+  cancelOrder(@Param('orderId') orderId: string): Promise<PublicOrderDto> {
+    return this.send(ORDERS_PATTERNS.CANCEL, { orderId });
   }
 
   @Get('user/:userId')

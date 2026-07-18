@@ -19,6 +19,13 @@ import { stripeProvider } from './stripe.provider';
           port: 4006,
         },
       },
+      {
+        name: MICROSERVICES.ORDER_SERVICE,
+        transport: Transport.TCP,
+        options: {
+          port: 4004,
+        },
+      },
     ]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],

@@ -2,7 +2,9 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   AddProductToCartDto,
+  ClearCartPayload,
   CreateCartDto,
+  GetCartPayload,
   PublicCartDto,
   PublicCartItemDto,
   RemoveProductFromCartDto,
@@ -18,6 +20,16 @@ export class AppController {
   @MessagePattern(SHOPPING_CART_PATTERNS.CREATE)
   createCart(@Payload() createCartDto: CreateCartDto): Promise<PublicCartDto> {
     return this.appService.create(createCartDto);
+  }
+
+  @MessagePattern(SHOPPING_CART_PATTERNS.GET)
+  getCart(@Payload() { userId }: GetCartPayload): Promise<PublicCartDto> {
+    return this.appService.get(userId);
+  }
+
+  @MessagePattern(SHOPPING_CART_PATTERNS.CLEAR)
+  clearCart(@Payload() { userId }: ClearCartPayload): Promise<PublicCartDto> {
+    return this.appService.clear(userId);
   }
 
   @MessagePattern(SHOPPING_CART_PATTERNS.ADD_PRODUCT)

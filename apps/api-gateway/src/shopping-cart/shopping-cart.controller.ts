@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   Inject,
   Param,
@@ -44,6 +45,22 @@ export class ShoppingCartController {
   @ApiResponse({ status: 400, description: 'Validation failed' })
   createCart(@Body() createCartDto: CreateCartDto): Promise<PublicCartDto> {
     return this.send(SHOPPING_CART_PATTERNS.CREATE, createCartDto);
+  }
+
+  @Get('user/:userId')
+  @ApiOperation({ summary: "Get a user's cart (created on first access)" })
+  @ApiResponse({ status: 200, type: PublicCartDto })
+  getCart(@Param('userId') userId: string): Promise<PublicCartDto> {
+    return this.send(SHOPPING_CART_PATTERNS.GET, { userId });
+  }
+
+  @Delete('user/:userId')
+  @HttpCode(200)
+  @ApiOperation({ summary: "Clear all items from a user's cart" })
+  @ApiResponse({ status: 200, type: PublicCartDto })
+  @ApiResponse({ status: 404, description: 'Cart not found' })
+  clearCart(@Param('userId') userId: string): Promise<PublicCartDto> {
+    return this.send(SHOPPING_CART_PATTERNS.CLEAR, { userId });
   }
 
   @Post(':cartId/items')

@@ -19,4 +19,9 @@ export class UsersController {
   ): Promise<PublicUserDto> {
     return this.usersService.update(id, updateUserDto);
   }
+
+  @MessagePattern(USERS_PATTERNS.DELETE)
+  delete(@Payload('id') id: string): Promise<void> {
+    return this.usersService.delete(id);
+  }
 }

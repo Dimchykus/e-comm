@@ -5,17 +5,23 @@ import {
   Get,
   Inject,
   Param,
+  Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   CreateProductDto,
+  FindAllProductsDto,
   MICROSERVICES,
+  PaginatedProductsDto,
   PRODUCTS_PATTERNS,
   PublicProductDto,
+  SearchProductsDto,
   UpdateProductDto,
+  UpdateStockDto,
 } from '@repo/shared';
 import { catchError, firstValueFrom, throwError } from 'rxjs';
 import { toHttpException } from '../common/rpc-error.util';
@@ -34,6 +40,33 @@ export class ProductsController {
         .send<T>(pattern, payload)
         .pipe(catchError((err) => throwError(() => toHttpException(err)))),
     );
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'List products with pagination and filters' })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated products',
+    type: PaginatedProductsDto,
+  })
+  findAllProducts(
+    @Query() findAllProductsDto: FindAllProductsDto,
+  ): Promise<PaginatedProductsDto> {
+    return this.send(PRODUCTS_PATTERNS.FIND_ALL, findAllProductsDto);
+  }
+
+  @Get('search')
+  @ApiOperation({ summary: 'Search products by name or description' })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated search results',
+    type: PaginatedProductsDto,
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  searchProducts(
+    @Query() searchProductsDto: SearchProductsDto,
+  ): Promise<PaginatedProductsDto> {
+    return this.send(PRODUCTS_PATTERNS.SEARCH, searchProductsDto);
   }
 
   @Get(':id')
@@ -77,7 +110,27 @@ export class ProductsController {
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
   ): Promise<PublicProductDto> {
-    return this.send(PRODUCTS_PATTERNS.UPDATE, { id, updateProductDto });
+    return this.send(PRODUCTS_PATTERNS.UPDATE, { id, data: updateProductDto });
+  }
+
+  @Patch(':id/stock')
+  @ApiOperation({ summary: 'Adjust product stock by a delta' })
+  @ApiParam({ name: 'id', description: 'Product UUID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Stock updated',
+    type: PublicProductDto,
+  })
+  @ApiResponse({ status: 404, description: 'Product not found' })
+  @ApiResponse({ status: 400, description: 'Insufficient stock' })
+  updateStock(
+    @Param('id') id: string,
+    @Body() updateStockDto: UpdateStockDto,
+  ): Promise<PublicProductDto> {
+    return this.send(PRODUCTS_PATTERNS.UPDATE_STOCK, {
+      id,
+      data: updateStockDto,
+    });
   }
 
   @Delete(':id')

@@ -8,6 +8,7 @@ export const USERS_PATTERNS = {
 
 export const PRODUCTS_PATTERNS = {
   CREATE: "product.create",
+  FIND_ALL: "product.findAll",
   FIND_BY_ID: "product.findById",
   UPDATE: "product.update",
   DELETE: "product.delete",
@@ -17,9 +18,11 @@ export const PRODUCTS_PATTERNS = {
 
 export const SHOPPING_CART_PATTERNS = {
   CREATE: "cart.create",
+  GET: "cart.get",
   ADD_PRODUCT: "cart.addProduct",
   REMOVE_PRODUCT: "cart.removeProduct",
   SET_PRODUCT_QUANTITY: "cart.setProductQuantity",
+  CLEAR: "cart.clear",
 } as const;
 
 export const ORDERS_PATTERNS = {
@@ -27,6 +30,7 @@ export const ORDERS_PATTERNS = {
   FIND_BY_ID: "order.findById",
   FIND_BY_USER: "order.findByUser",
   UPDATE_STATUS: "order.updateStatus",
+  CANCEL: "order.cancel",
 } as const;
 
 export const PAYMENTS_PATTERNS = {
