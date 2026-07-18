@@ -1,12 +1,17 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
   ChargePaymentDto,
+  MICROSERVICES,
+  NOTIFICATION_EVENTS,
   PaymentStatus,
   PublicPaymentDto,
 } from '@repo/shared';
@@ -15,10 +20,20 @@ import { toPublicPayment } from './utils/map';
 
 @Injectable()
 export class AppService {
+  private readonly logger = new Logger(AppService.name);
+
   constructor(
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
+    @Inject(MICROSERVICES.NOTIFICATION_SERVICE)
+    private readonly notificationClient: ClientProxy,
   ) {}
+
+  private emitEvent(event: string, payload: unknown): void {
+    this.notificationClient.emit(event, payload).subscribe({
+      error: (err) => this.logger.error(`Failed to emit ${event}`, err),
+    });
+  }
 
   async charge(chargePaymentDto: ChargePaymentDto): Promise<PublicPaymentDto> {
     const payment = new Payment();
@@ -31,6 +46,13 @@ export class AppService {
     payment.stripePaymentIntentId = null;
 
     const savedPayment = await this.paymentRepository.save(payment);
+
+    this.emitEvent(NOTIFICATION_EVENTS.PAYMENT_SUCCEEDED, {
+      paymentId: savedPayment.id,
+      orderId: savedPayment.orderId,
+      userId: savedPayment.userId,
+      amount: savedPayment.amount,
+    });
 
     return toPublicPayment(savedPayment);
   }

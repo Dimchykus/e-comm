@@ -1,8 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
   CreateOrderDto,
+  MICROSERVICES,
+  NOTIFICATION_EVENTS,
   OrderStatus,
   PublicOrderDto,
   UpdateOrderStatusDto,
@@ -13,10 +16,20 @@ import { toPublicOrder } from './utils/map';
 
 @Injectable()
 export class AppService {
+  private readonly logger = new Logger(AppService.name);
+
   constructor(
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
+    @Inject(MICROSERVICES.NOTIFICATION_SERVICE)
+    private readonly notificationClient: ClientProxy,
   ) {}
+
+  private emitEvent(event: string, payload: unknown): void {
+    this.notificationClient.emit(event, payload).subscribe({
+      error: (err) => this.logger.error(`Failed to emit ${event}`, err),
+    });
+  }
 
   async create(createOrderDto: CreateOrderDto): Promise<PublicOrderDto> {
     const order = new Order();
@@ -37,6 +50,12 @@ export class AppService {
     );
 
     const savedOrder = await this.orderRepository.save(order);
+
+    this.emitEvent(NOTIFICATION_EVENTS.ORDER_CREATED, {
+      orderId: savedOrder.id,
+      userId: savedOrder.userId,
+      total: savedOrder.total,
+    });
 
     return toPublicOrder(savedOrder);
   }
@@ -74,6 +93,13 @@ export class AppService {
     order.status = updateOrderStatusDto.status;
 
     await this.orderRepository.save(order);
+
+    if (order.status === OrderStatus.SHIPPED) {
+      this.emitEvent(NOTIFICATION_EVENTS.ORDER_SHIPPED, {
+        orderId: order.id,
+        userId: order.userId,
+      });
+    }
 
     return toPublicOrder(order);
   }

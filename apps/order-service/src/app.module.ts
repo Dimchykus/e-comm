@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MICROSERVICES } from '@repo/shared';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Order } from './entities/order.entity';
@@ -9,6 +11,15 @@ import { OrderItem } from './entities/order-item.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ClientsModule.register([
+      {
+        name: MICROSERVICES.NOTIFICATION_SERVICE,
+        transport: Transport.TCP,
+        options: {
+          port: 4006,
+        },
+      },
+    ]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

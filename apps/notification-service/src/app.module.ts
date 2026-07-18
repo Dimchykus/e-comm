@@ -1,24 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MICROSERVICES } from '@repo/shared';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Payment } from './entities/payment.entity';
+import { NotificationLog } from './entities/notification-log.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    ClientsModule.register([
-      {
-        name: MICROSERVICES.NOTIFICATION_SERVICE,
-        transport: Transport.TCP,
-        options: {
-          port: 4006,
-        },
-      },
-    ]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -28,14 +17,14 @@ import { Payment } from './entities/payment.entity';
         username: config.get('DB_USERNAME', 'postgres'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_NAME', 'postgres'),
-        entities: [Payment],
+        entities: [NotificationLog],
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
         migrationsRun: false,
         synchronize: false,
         logging: config.get('NODE_ENV') === 'development',
       }),
     }),
-    TypeOrmModule.forFeature([Payment]),
+    TypeOrmModule.forFeature([NotificationLog]),
   ],
   controllers: [AppController],
   providers: [AppService],

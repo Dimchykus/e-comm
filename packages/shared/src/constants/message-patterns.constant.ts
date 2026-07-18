@@ -34,3 +34,11 @@ export const PAYMENTS_PATTERNS = {
   REFUND: "payment.refund",
   GET_HISTORY: "payment.getHistory",
 } as const;
+
+/** Domain events consumed by the notification service (emit, not send). */
+export const NOTIFICATION_EVENTS = {
+  ORDER_CREATED: "order.created",
+  PAYMENT_SUCCEEDED: "payment.succeeded",
+  PAYMENT_FAILED: "payment.failed",
+  ORDER_SHIPPED: "order.shipped",
+} as const;
