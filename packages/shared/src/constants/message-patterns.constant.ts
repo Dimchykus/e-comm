@@ -21,3 +21,10 @@ export const SHOPPING_CART_PATTERNS = {
   REMOVE_PRODUCT: "cart.removeProduct",
   SET_PRODUCT_QUANTITY: "cart.setProductQuantity",
 } as const;
+
+export const ORDERS_PATTERNS = {
+  CREATE: "order.create",
+  FIND_BY_ID: "order.findById",
+  FIND_BY_USER: "order.findByUser",
+  UPDATE_STATUS: "order.updateStatus",
+} as const;
