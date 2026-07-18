@@ -2,10 +2,12 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   ChargePaymentDto,
+  ChargePaymentResponseDto,
   GetPaymentHistoryPayload,
   PAYMENTS_PATTERNS,
   PublicPaymentDto,
   RefundPaymentPayload,
+  StripeWebhookPayload,
 } from '@repo/shared';
 import { AppService } from './app.service';
 
@@ -16,8 +18,15 @@ export class AppController {
   @MessagePattern(PAYMENTS_PATTERNS.CHARGE)
   chargePayment(
     @Payload() chargePaymentDto: ChargePaymentDto,
-  ): Promise<PublicPaymentDto> {
+  ): Promise<ChargePaymentResponseDto> {
     return this.appService.charge(chargePaymentDto);
+  }
+
+  @MessagePattern(PAYMENTS_PATTERNS.WEBHOOK)
+  handleWebhook(
+    @Payload() webhookPayload: StripeWebhookPayload,
+  ): Promise<{ received: boolean }> {
+    return this.appService.handleWebhook(webhookPayload);
   }
 
   @MessagePattern(PAYMENTS_PATTERNS.REFUND)

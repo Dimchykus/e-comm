@@ -20,3 +20,13 @@ export class PublicPaymentDto {
   @ApiProperty({ example: "2026-07-18T12:00:00.000Z" })
   createdAt: Date;
 }
+
+export class ChargePaymentResponseDto extends PublicPaymentDto {
+  @ApiProperty({
+    example: "pi_3MtwBwLkdIwHu7ix28a3tqPa_secret_YrKJUKribcBjcG8HVhfZluoGH",
+    nullable: true,
+    description:
+      "Stripe PaymentIntent client secret used by the frontend to confirm the payment",
+  })
+  clientSecret: string | null;
+}

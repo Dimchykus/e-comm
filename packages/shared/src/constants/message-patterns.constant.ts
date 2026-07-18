@@ -33,6 +33,7 @@ export const PAYMENTS_PATTERNS = {
   CHARGE: "payment.charge",
   REFUND: "payment.refund",
   GET_HISTORY: "payment.getHistory",
+  WEBHOOK: "payment.webhook",
 } as const;
 
 /** Domain events consumed by the notification service (emit, not send). */

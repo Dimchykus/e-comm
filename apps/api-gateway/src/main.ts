@@ -4,7 +4,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // rawBody keeps the untouched payload for Stripe webhook signature checks
+  const app = await NestFactory.create(AppModule, { rawBody: true });
 
   app.useGlobalPipes(
     new ValidationPipe({

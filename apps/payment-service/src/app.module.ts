@@ -6,6 +6,7 @@ import { MICROSERVICES } from '@repo/shared';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Payment } from './entities/payment.entity';
+import { stripeProvider } from './stripe.provider';
 
 @Module({
   imports: [
@@ -38,6 +39,6 @@ import { Payment } from './entities/payment.entity';
     TypeOrmModule.forFeature([Payment]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, stripeProvider],
 })
 export class AppModule {}

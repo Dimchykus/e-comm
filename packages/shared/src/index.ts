@@ -33,5 +33,6 @@ export * from "./interfaces/payment.interface";
 export * from "./dto/charge-payment.dto";
 export * from "./dto/payment-payloads.dto";
 export * from "./dto/public-payment.dto";
+export * from "./dto/stripe-webhook.dto";
 export * from "./interfaces/notification.interface";
 export * from "./dto/notification-events.dto";

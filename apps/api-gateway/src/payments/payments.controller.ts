@@ -2,19 +2,29 @@ import {
   Body,
   Controller,
   Get,
+  Headers,
   HttpCode,
   Inject,
   Param,
   Post,
+  Req,
 } from '@nestjs/common';
+import type { RawBodyRequest } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExcludeEndpoint,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   ChargePaymentDto,
+  ChargePaymentResponseDto,
   MICROSERVICES,
   PAYMENTS_PATTERNS,
   PublicPaymentDto,
 } from '@repo/shared';
+import type { Request } from 'express';
 import { catchError, firstValueFrom, throwError } from 'rxjs';
 import { toHttpException } from '../common/rpc-error.util';
 
@@ -35,13 +45,26 @@ export class PaymentsController {
   }
 
   @Post('charge')
-  @ApiOperation({ summary: 'Charge a payment for an order' })
-  @ApiResponse({ status: 201, type: PublicPaymentDto })
+  @ApiOperation({ summary: 'Create a Stripe payment intent for an order' })
+  @ApiResponse({ status: 201, type: ChargePaymentResponseDto })
   @ApiResponse({ status: 400, description: 'Validation failed' })
   chargePayment(
     @Body() chargePaymentDto: ChargePaymentDto,
-  ): Promise<PublicPaymentDto> {
+  ): Promise<ChargePaymentResponseDto> {
     return this.send(PAYMENTS_PATTERNS.CHARGE, chargePaymentDto);
+  }
+
+  @Post('webhook')
+  @HttpCode(200)
+  @ApiExcludeEndpoint()
+  handleStripeWebhook(
+    @Req() req: RawBodyRequest<Request>,
+    @Headers('stripe-signature') signature: string,
+  ): Promise<{ received: boolean }> {
+    return this.send(PAYMENTS_PATTERNS.WEBHOOK, {
+      body: req.rawBody?.toString('utf8') ?? '',
+      signature: signature ?? '',
+    });
   }
 
   @Post(':paymentId/refund')
